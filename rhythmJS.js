@@ -1,16 +1,24 @@
 (function(window) {
     'use strict';
 
-    window.rhythmJS = window.rhythmJS || {};
+    var RhythmJS;
+
+    window.$ = RhythmJS = function(selector) {
+        if (!(this instanceof RhythmJS)) {
+            return new RhythmJS(selector);
+        }
+
+        this.nodeList = document.querySelectorAll(selector);
+    }
 
     // Nicholas C. Zakas, Maintainable Javascript
     // TODO can't be used for determining the function of DOM elements on IE8
-    rhythmJS.isFunction = function(func) {
+    RhythmJS.isFunction = function(func) {
         return typeof func === 'function';
     }
 
     // Nicholas C. Zakas, Maintainable Javascript
-    rhythmJS.isArray = function(value) {
+    RhythmJS.isArray = function(value) {
         if (typeof Array.isArray === 'function') {
             return Array.isArray(value);
         } else {
@@ -19,24 +27,43 @@
     }
 
     // John Resig, http://ejohn.org/projects/flexible-javascript-events/
-    rhythmJS.addEvent = function(obj, type, fn) {
-        if (obj.attachEvent) {
-            obj['e' + type + fn] = fn;
-            obj[type + fn] = function() {
-                obj['e' + type + fn](window.event);
+    RhythmJS.prototype.on = function(eventName, eventHandler) {
+        var node,
+            nodeList = this.nodeList;
+
+        for (var i = 0; i < nodeList.length; ++i) {
+            node = nodeList[i];
+
+            // TODO change to determine the event attach method when the page load, do not determine it in the loop
+            if (node.attachEvent) {
+                node['e' + eventName + eventHandler] = eventHandler;
+                node[eventName + eventHandler] = function() {
+                    node['e' + eventName + eventHandler](window.event);
+                }
+                node.attachEvent('on' + eventName, node[eventName + eventHandler]);
+            } else {
+                node.addEventListener(eventName, eventHandler);
             }
-            obj.attachEvent('on' + type, obj[type + fn]);
-        } else {
-            obj.addEventListener(type, fn, false);
         }
+
+        return this;
     }
 
-    rhythmJS.removeEvent = function(obj, type, fn) {
-        if (obj.detachEvent) {
-            obj.detachEvent('on' + type, obj[type + fn]);
-            obj[type + fn] = null;
-        } else {
-            obj.removeEventListener(type, fn, false);
+    RhythmJS.prototype.off = function(eventName, eventHandler) {
+        var node,
+            nodeList = this.nodeList;
+
+        for (var i = 0; i < nodeList.length; ++i) {
+            node = nodeList[i];
+
+            if (node.detachEvent) {
+                node.detachEvent('on' + eventName, node[eventName + eventHandler]);
+                node[eventName + eventHandler] = null;
+            } else {
+                node.removeEventListener(eventName, eventHandler);
+            }
         }
+
+        return this;
     }
 }(window));
