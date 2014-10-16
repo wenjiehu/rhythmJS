@@ -42,6 +42,18 @@
 
     }());
 
+    // iterate the node list
+    RhythmJS.prototype._each = function(callback) {
+        var node,
+            nodeList = this.nodeList;
+
+        for (var i = 0; i < nodeList.length; ++i) {
+            node = nodeList[i];
+
+            callback(node);
+        }
+    };
+
     // Nicholas C. Zakas, Maintainable Javascript
     // TODO can't be used for determining the function of DOM elements on IE8
     RhythmJS.isFunction = function(func) {
@@ -59,43 +71,57 @@
 
     // John Resig, http://ejohn.org/projects/flexible-javascript-events/
     RhythmJS.prototype.on = function(eventName, eventHandler) {
-        var node,
-            nodeList = this.nodeList;
-
-        for (var i = 0; i < nodeList.length; ++i) {
-            node = nodeList[i];
-
-            RhythmJS._addEventListener(node, eventName, eventHandler);
-        }
+        this._each(function(element) {
+            RhythmJS._addEventListener(element, eventName, eventHandler);
+        });
 
         return this;
     };
 
     RhythmJS.prototype.off = function(eventName, eventHandler) {
-        var node,
-            nodeList = this.nodeList;
-
-        for (var i = 0; i < nodeList.length; ++i) {
-            node = nodeList[i];
-
-            RhythmJS._removeEventListener(node, eventName, eventHandler);
-        }
+        this._each(function(element) {
+            RhythmJS._removeEventListener(element, eventName, eventHandler);
+        });
 
         return this;
     };
 
     RhythmJS.prototype.trigger = function(eventName) {
-        var nodeList = this.nodeList,
-            node, 
-            event;
-
-        for (var i = 0; i < nodeList.length; ++i) {
-            node = nodeList[i];
-
-            event = document.createEvent('HTMLEvents');
+        this._each(function(element) {
+            var event = document.createEvent('HTMLEvents');
             event.initEvent(eventName, true, false);
-            node.dispatchEvent(event);
-        }
+            element.dispatchEvent(event);
+        });
+
+        return this;
+    };
+
+    RhythmJS.prototype.attr = function() {
+
+
+        return this;
+    };
+
+    RhythmJS.prototype.hasClass = function(className) {
+
+
+        return this;
+    };
+
+    RhythmJS.prototype.addClass = function(className) {
+        
+
+        return this;
+    };
+
+    RhythmJS.prototype.removeClass = function(className) {
+        
+
+        return this;
+    };
+
+    RhythmJS.prototype.css = function(properties) {
+        
 
         return this;
     };
