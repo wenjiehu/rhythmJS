@@ -43,14 +43,14 @@
     }());
 
     // iterate the node list
-    RhythmJS.prototype._each = function(callback) {
+    RhythmJS.prototype.each = function(callback) {
         var node,
             nodeList = this.nodeList;
 
         for (var i = 0; i < nodeList.length; ++i) {
             node = nodeList[i];
 
-            callback(node);
+            callback(i, node);
         }
     };
 
@@ -75,7 +75,7 @@
 
     // John Resig, http://ejohn.org/projects/flexible-javascript-events/
     RhythmJS.prototype.on = function(eventName, eventHandler) {
-        this._each(function(element) {
+        this.each(function(index, element) {
             RhythmJS._addEventListener(element, eventName, eventHandler);
         });
 
@@ -83,7 +83,7 @@
     };
 
     RhythmJS.prototype.off = function(eventName, eventHandler) {
-        this._each(function(element) {
+        this.each(function(index, element) {
             RhythmJS._removeEventListener(element, eventName, eventHandler);
         });
 
@@ -91,7 +91,7 @@
     };
 
     RhythmJS.prototype.trigger = function(eventName) {
-        this._each(function(element) {
+        this.each(function(index, element) {
             var event = document.createEvent('HTMLEvents');
             event.initEvent(eventName, true, false);
             element.dispatchEvent(event);
@@ -104,11 +104,11 @@
         var nodeList = this.nodeList;
 
         if(RhythmJS.isFunction(arg1)) {
-            this._each(function(element) {
+            this.each(function(index, element) {
                 arg1(element.getAttribute(attrName));
             });
         } else if (RhythmJS.isString(arg1)) {
-            this._each(function(element) {
+            this.each(function(index, element) {
                 element.setAttribute(attrName, arg1);
             });
         } else {
