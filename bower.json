@@ -1,0 +1,13 @@
+{
+  "name": "RhythmJS",
+  "version": "1.0.0",
+  "main": [
+
+  ],
+  "ignore": [
+
+  ],
+  "dependencies": {
+    "qunit": ">= 1.15.0"
+  }
+}

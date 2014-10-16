@@ -1,0 +1,15 @@
+{
+  "name": "RhythmJS",
+  "description": "A Javascript library",
+  "version": "1.0.0",
+  "devDependencies": {
+    "grunt": "latest",
+    "grunt-contrib-qunit": "latest",
+    "grunt-contrib-watch": "latest",
+    "grunt-contrib-concat": "latest",
+    "grunt-contrib-jshint": "latest",
+    "grunt-contrib-uglify": "latest",
+    "grunt-contrib-copy": "latest",
+    "grunt-contrib-clean": "latest"
+  }
+}

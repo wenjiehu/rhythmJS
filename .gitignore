@@ -1,0 +1,12 @@
+Thumbs.db
+.project
+*.sublime-project
+*.sublime-workspace
+
+.DS_Store
+
+.tmp
+.sass-cache
+dist
+bower_components
+node_modules
