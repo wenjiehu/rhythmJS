@@ -103,7 +103,7 @@
     RhythmJS.prototype.attr = function(attrName, arg1) {
         var nodeList = this.nodeList;
 
-        if(RhythmJS.isFunction(arg1)) {
+        if (RhythmJS.isFunction(arg1)) {
             this.each(function(index, element) {
                 arg1(element.getAttribute(attrName));
             });
@@ -112,30 +112,72 @@
                 element.setAttribute(attrName, arg1);
             });
         } else {
-            return nodeList[0]? nodeList[0].getAttribute(attrName): null;
+            return nodeList[0] ? nodeList[0].getAttribute(attrName) : null;
         }
     };
 
+    // check if an DOM element has the class
+    function isClassExist(className, element) {
+        var classValue = element.getAttribute('class'),
+            classArr,
+            i;
+
+        if (classValue) {
+            classArr = classValue.split(' ');
+            for (i = classArr.length - 1; i >= 0; i--) {
+                if (classArr[i] === className) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
     RhythmJS.prototype.hasClass = function(className) {
+        var nodeList = this.nodeList,
+            i;
 
+        for (i = 0; i < nodeList.length; i++) {
+            if (isClassExist(className, nodeList[0])) {
+                return true;
+            }
+        }
 
-        return this;
+        return false;
     };
 
     RhythmJS.prototype.addClass = function(className) {
-        
+        this.each(function(index, element) {
+            if (!isClassExist(className, element)) {
+                element.setAttribute('class', element.getAttribute('class') + ' ' + className);
+            }
+        });
 
         return this;
     };
 
     RhythmJS.prototype.removeClass = function(className) {
-        
+        this.each(function(index, element) {
+            var classValue = element.getAttribute('class'),
+                classArr,
+                i;
+
+            if (classValue) {
+                classArr = classValue.split(' ');
+                while (i = classArr.indexOf(className) !== -1) {
+                    classArr.splice(i, 1);
+                }
+
+                element.setAttribute('class', classArr.join(' '));
+            }
+        });
 
         return this;
     };
 
     RhythmJS.prototype.css = function(properties) {
-        
+
 
         return this;
     };
