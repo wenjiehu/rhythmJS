@@ -4,6 +4,7 @@ Thumbs.db
 *.sublime-workspace
 
 .DS_Store
+npm-debug.log
 
 .tmp
 .sass-cache

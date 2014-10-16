@@ -56,8 +56,8 @@
 
     // Nicholas C. Zakas, Maintainable Javascript
     // TODO can't be used for determining the function of DOM elements on IE8
-    RhythmJS.isFunction = function(func) {
-        return typeof func === 'function';
+    RhythmJS.isFunction = function(value) {
+        return typeof value === 'function';
     };
 
     // Nicholas C. Zakas, Maintainable Javascript
@@ -67,6 +67,10 @@
         } else {
             return Object.prototype.toString.call(value) === "[object Array]";
         }
+    };
+
+    RhythmJS.isString = function(value) {
+        return typeof value === 'string';
     };
 
     // John Resig, http://ejohn.org/projects/flexible-javascript-events/
@@ -96,10 +100,20 @@
         return this;
     };
 
-    RhythmJS.prototype.attr = function() {
+    RhythmJS.prototype.attr = function(attrName, arg1) {
+        var nodeList = this.nodeList;
 
-
-        return this;
+        if(RhythmJS.isFunction(arg1)) {
+            this._each(function(element) {
+                arg1(element.getAttribute(attrName));
+            });
+        } else if (RhythmJS.isString(arg1)) {
+            this._each(function(element) {
+                element.setAttribute(attrName, arg1);
+            });
+        } else {
+            return nodeList[0]? nodeList[0].getAttribute(attrName): null;
+        }
     };
 
     RhythmJS.prototype.hasClass = function(className) {
