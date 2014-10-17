@@ -44,12 +44,12 @@
 
     // extend target object with object1
     RhythmJS.extend = function(target, object1) {
-        for(var property in object1) {
-            if(object1.hasOwnProperty(property)) {
+        for (var property in object1) {
+            if (object1.hasOwnProperty(property)) {
                 target[property] = object1[property];
             }
         }
-    }
+    };
 
     // iterate the node list
     RhythmJS.prototype.each = function(callback) {
@@ -190,10 +190,52 @@
         return name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
     }
 
+    // change hyphen-style name to camel-style
+    function hyphenToCamel(name) {
+        return name.replace(/-([a-z])/g, function(g) {
+            return g[1].toUpperCase();
+        });
+    }
+
+    // change the value of attribute "style" to an Javascript object
+    function stylesToObject(styles) {
+        var result = {},
+            styleArr,
+            stylePair,
+            i;
+
+        if(styles) {
+            styleArr = styles.split(';');
+            for (i = styleArr.length - 1; i >= 0; i--) {
+                stylePair = styleArr.split(':');
+                result[hyphenToCamel(stylePair[0].trim())] = stylePair[1].trim();
+            }
+        }
+
+        return result;
+    }
+
+    // change an Javascript object to the value of attribute "style"
+    function objectToStyles(object) {
+        var result = '';
+
+        for(var property in object) {
+            if(object.hasOwnProperty(property)) {
+                result += camelToHyphen(property) + ": " + object[property] + '; ';
+            }
+        }
+
+        return result;
+    }
+
     RhythmJS.prototype.css = function(properties) {
         this.each(function(index, element) {
-            var style = element.getAttribute('style');
+            var styles = element.getAttribute('style'),
+                stylesObject = stylesToObject(styles);
 
+            RhythmJS.extend(stylesObject, properties);
+
+            element.setAttribute('style', objectToStyles(stylesObject));
         });
 
         return this;
