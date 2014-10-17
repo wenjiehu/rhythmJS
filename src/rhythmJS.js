@@ -42,6 +42,15 @@
 
     }());
 
+    // extend target object with object1
+    RhythmJS.extend = function(target, object1) {
+        for(var property in object1) {
+            if(object1.hasOwnProperty(property)) {
+                target[property] = object1[property];
+            }
+        }
+    }
+
     // iterate the node list
     RhythmJS.prototype.each = function(callback) {
         var node,
@@ -176,8 +185,16 @@
         return this;
     };
 
-    RhythmJS.prototype.css = function(properties) {
+    // change camel-style name to hyphen-style
+    function camelToHyphen(name) {
+        return name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
+    }
 
+    RhythmJS.prototype.css = function(properties) {
+        this.each(function(index, element) {
+            var style = element.getAttribute('style');
+
+        });
 
         return this;
     };
